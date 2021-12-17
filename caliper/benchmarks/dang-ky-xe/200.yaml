@@ -1,0 +1,26 @@
+test:
+    name: basic-contract-benchmark
+    description: test benchmark
+    workers:
+      type: local
+      number: 5
+    rounds:
+      - label: 200tps
+        description: Đăng ký xe benchmark
+        txNumber: 5000
+        rateControl: 
+          type: fixed-rate
+          opts:
+            tps: 200
+        workload:
+          module: workload/carRegistration.js
+          arguments:
+            assets: 10
+            contractId: CRChaincode
+monitors:
+  resource:
+  - module: docker
+    options:
+      interval: 5 
+      containers:
+      - all

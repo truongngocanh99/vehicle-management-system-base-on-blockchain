@@ -1,0 +1,26 @@
+test:
+    name: basic-contract-benchmark
+    description: test benchmark
+    workers:
+      type: local
+      number: 5
+    rounds:
+      - label: 250tps
+        description: Chuyển sở hữu benchmark
+        txNumber: 5000
+        rateControl: 
+          type: fixed-rate
+          opts:
+            tps: 250
+        workload:
+          module: workload/transfer.js
+          arguments:
+            assets: 10
+            contractId: CRChaincode
+monitors:
+  resource:
+  - module: docker
+    options:
+      interval: 5 
+      containers:
+      - all

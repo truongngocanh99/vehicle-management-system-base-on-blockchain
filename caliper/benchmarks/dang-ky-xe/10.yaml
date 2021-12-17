@@ -1,0 +1,35 @@
+test:
+    name: basic-contract-benchmark
+    description: test benchmark
+    workers:
+      type: local
+      number: 3
+    rounds:
+      - label: 10tps
+        description: Đăng ký xe benchmark
+        txDuration: 30
+        rateControl: 
+          type: fixed-rate
+          opts:
+            tps: 10
+        workload:
+          module: workload/carRegistration.js
+          arguments:
+            assets: 10
+            contractId: CRChaincode
+monitors:
+  resource:
+  - module: docker
+    options:
+      interval: 5 
+      containers:
+      - all
+    charting:
+      bar:
+        metrics: [CPU%(max)]
+      polar:
+        metrics: [all]
+  - module: process
+    options:
+      interval: 3
+      processes: [{ command: 'node', arguments: '/home/anh/car/caliper/node_modules/.bin/caliper', multiOutput: 'avg' }]

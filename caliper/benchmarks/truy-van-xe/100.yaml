@@ -1,0 +1,26 @@
+test:
+    name: basic-contract-benchmark
+    description: test benchmark
+    workers:
+      type: local
+      number: 3
+    rounds:
+      - label: 100tps
+        description: Truy vấn xe
+        txDuration: 30
+        rateControl: 
+          type: fixed-rate
+          opts:
+            tps: 100
+        workload:
+          module: workload/queryCar.js
+          arguments:
+            assets: 10
+            contractId: CRChaincode
+monitors:
+  resource:
+  - module: docker
+    options:
+      interval: 5 
+      containers:
+      - all
