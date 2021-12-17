@@ -71,12 +71,7 @@ export default () => {
     }
  
     const columns = [
-        {
-            title: 'ID',
-            key: 'id',
-            dataIndex: 'id',
-            width:150
-        },
+     
         {
             title: 'Loại xe đăng ký',
             key: 'name',
