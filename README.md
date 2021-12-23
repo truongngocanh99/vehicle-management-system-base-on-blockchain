@@ -1,6 +1,7 @@
 # vehicle-management-system-base-on-blockchain
 Yêu cầu: Hệ điều hành Ubuntu 18.04 trở lên, đã cài đặt NodeJS, docker, docker
 compose
+
 Bước 1. Clone project về máy:
 git clone https://github.com/truongngocanh99/vehicle-management-system-base-on-blockchain.git
 
