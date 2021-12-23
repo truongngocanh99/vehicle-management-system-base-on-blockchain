@@ -1,5 +1,0 @@
-0: Đăng ký
-1: Xác nhận đăng ký
-2: Hủy đăng ký
-3: Sang tên
-4: Thay đổi thông tin xe
