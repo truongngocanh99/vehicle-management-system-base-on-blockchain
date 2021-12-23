@@ -190,7 +190,7 @@ export default ({disable, policeId, admin}) => {
                 hasFeedback
                 rules={[{ required: true, message: 'Vui lòng nhập nơi cấp' }]}
             >
-                <Input placeholder="Quận/Huyện, Tỉnh/Thành Phố" disabled={posting}></Input>
+                <Input  disabled={posting}></Input>
             </Form.Item>
             <Form.Item
                 name="dateOfIdentity"
@@ -284,7 +284,7 @@ export default ({disable, policeId, admin}) => {
                 <Result
                     status="success"
                     title={policeId ? 'Thêm thành công' : 'Đăng ký thành công'}
-                    subTitle={policeId ? null : 'Đăng nhập để bắt đầu đăng ký xe'}
+                    subTitle={policeId ? null : 'Vui lòng kích hoạt tài khoản để đăng nhập'}
                 />
             </Modal>
         </Form>

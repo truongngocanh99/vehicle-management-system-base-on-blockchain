@@ -1,1 +1,5 @@
+1. Thay đổi cấu hình trong các tập tin .yaml thư mục benchmarks
+2. Thay đổi cấu hình trong networks/networkConfig
+3. Chỉnh sửa workload
+4. Chạy lệnh sau:
 npx caliper launch manager --caliper-workspace ./ --caliper-networkconfig networks/networkConfig.yaml --caliper-benchconfig benchmarks/benchmark.yaml --caliper-flow-only-test --caliper-fabric-gateway-enabled

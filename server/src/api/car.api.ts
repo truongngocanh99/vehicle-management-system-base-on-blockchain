@@ -6,7 +6,11 @@ import { mail_registry_car,
     mail_registered_car ,
     mail_edit_confirmRegistration,
     mail_confirmRegistration,
-    mail_tranfer_car
+    mail_tranfer_car,
+    mail_rejectRegistration,
+    mail_rejectTransfer,
+    mail_approveTransfer,
+    mail_comfirmTransfer
 } from "./mail.api";
 import {registryCar,
         getAllCars,
@@ -73,14 +77,19 @@ router.post('/', authentication, async (req: Request, res: Response) => {
             registeredDistrict: req.body.registeredDistrict,
             carType: req.body.carType,
         }
+        const date = moment(new Date(),"YYYY-MM-DD").format("DD-MM-YYYY hh:mm:ss");
         const city = await getCity(req.body.registeredCity);
         const registryResult = await registryCar(car, userId);
+        const date_detail = new Date();
         if(registryResult.success == true){
             await  mail_registry_car({
                 //departmentEmail:"csgt65@gmail.com",
                 email:req.user.email,
                 departmentEmail:city.departmentEmail,
-                date: moment(new Date(),"YYYY-MM-DD").format("DD-MM-YYYY hh:mm:ss"),
+                date:date,
+                day: date_detail.getDate(),
+                month: date_detail.getMonth()+1,
+                year: date_detail.getFullYear(),
                 id: car.id,
                 fullName: req.user.fullName,
                 profile_name: "Đăng ký, cấp biển số  xe",
@@ -178,7 +187,7 @@ router.get('/CityAndMonth', authentication, async (req: Request, res: Response) 
     }
     
     const cars = await queryCars(id, JSON.stringify(queryString));
-    if(!cars|| cars.ength === 0) return res.sendStatus(404)
+    if(!cars|| cars.length === 0) return res.sendStatus(404)
     let result: any = await Promise.all(cars.map(async (state: { Record: any; }) => {
         const car = state.Record;
         return car;
@@ -516,7 +525,15 @@ const getCar = async (id: any) => {
     const result = await queryCars('admin', JSON.stringify(queryString));
     return result[0].Record;
 }
-
+const getTransfer = async (id: any) => {
+    const queryString: any = {};
+    queryString.selector = {
+        docType: 'transfer',
+        id: id
+    }
+    const result = await queryCars('admin', JSON.stringify(queryString));
+    return result[0].Record;
+}
 router.get('/:id/transferDeal', authentication, async (req: Request, res: Response) => {
     try {
         const queryString: any = {};
@@ -631,13 +648,13 @@ router.put('/:id/acceptRegistration/', authentication, async (req: Request, res:
         let registrationNumber = "";
         let car = await getCar(req.params.id);
         const user_id=car.owner;
-        const object = await getOb(car.carType,car.registeredCity);// lay doi tuong dang ky - seri dang ky
+        const object = await getOb(car.carType,car.registeredCity);
         const city = await getCity(car.registeredCity);
         const number = city.number[city.current_numberIndex];
         console.log("So hieu bien so hien tai", number);
         const seri = object.seri[object.currentseri_Index];
         console.log("Seri hien tai:",seri);
-        let count_number = city.number_of_license_plates;// lay so luong bien so xe da dang ky trong tinh thanh/thanh pho tuc thuoc tw
+        let count_number = city.number_of_license_plates;
         var threefirstNumber;
         if(city.threefirstNumber.toString().length == 1){
             threefirstNumber ="00"+city.threefirstNumber;
@@ -698,7 +715,6 @@ router.put('/:id/acceptRegistration/', authentication, async (req: Request, res:
                 date: today.getDate(),
                 month:today.getMonth()+1,
                 year:today.getFullYear(),
-
             });
             await updateNumberofPlate(req.user.id, city.id);  
              await countSeri(req.user.id,object.id);
@@ -757,7 +773,7 @@ router.put('/:id/confirmRegistration/', authentication, async (req: Request, res
                     departmentName: city.departmentName,
                     district_name: district.districtName,
                     time:timeType,
-                    booking_date:moment(date,"YYYY-MM-DD").format("DD-MM-YYYY"),
+                    booking_date:moment(new Date(date),"YYYY-MM-DD").format("DD-MM-YYYY"),
                     departmentAddress: city.departmentAddress,
                     number:booking.ordinalNumber,
                     id:car.id,
@@ -839,10 +855,11 @@ router.put('/:id/confirmRegistration_edit/', authentication, async (req: Request
     }
 });
 router.put('/:carId/rejectRegistration/', authentication, async (req: Request, res: Response) => {
-    // if (req.user.role !== 'police') {
-    //     return res.sendStatus(401);
-    // }
     const id = req.user.id;
+    let car = await getCar(req.params.carId);
+    const city = await getCity(car.registeredCity);
+    const  owner = await getUser(car.owner);
+    const date_detail = new Date();
     const acceptRegistrationResult = await rejectCarRegistration(req.params.carId, id);
     if (!acceptRegistrationResult.success) {
         return res.sendStatus(403);
@@ -858,6 +875,16 @@ router.put('/:carId/rejectRegistration/', authentication, async (req: Request, r
         } catch (error) {
             
         }
+        await mail_rejectRegistration ({
+            departmentEmail:city.departmentEmail,
+            email:owner.email,
+            fullName:owner.fullName,
+            date: date_detail.getDate(),
+            month: date_detail.getMonth()+1,
+            year: date_detail.getFullYear(),
+            id:req.params.carId,
+            
+        })
         return res.json({ TxID: acceptRegistrationResult.result.TxID });
     }
 });
@@ -888,6 +915,7 @@ router.post('/:carId/transferOwnership', authentication, async (req: Request, re
             currentOwner_name:current_Owner.fullName,
             current_district:current_Owner.district.districtName,
             current_city:current_Owner.city.name,
+            current_phonenumber:current_Owner.phoneNumber,
             brand:car.brand,
             model:car.model,
             color:car.color,
@@ -921,6 +949,19 @@ router.get('/transfers', authentication, async (req: Request, res: Response) => 
 router.post('/transfer/:dealId/approveTransfer/', authentication, async (req: Request, res: Response) => {
     try {
         const TxID = await approveTransferDeal(req.user.id, req.params.dealId);
+        const transfer = await getTransfer(req.params.dealId);
+        const currentOwner = await getUser(transfer.currentOwner);
+        const newOwner = await getUser(transfer.newOwner);
+        const detail_date = new Date();
+        await mail_approveTransfer({
+            currentOwner:currentOwner.email,
+            date:detail_date.getDate(),
+            month:detail_date.getMonth()+1,
+            year:detail_date.getFullYear(),
+            id:req.params.dealId,
+            currentOwnerName:currentOwner.fullName,
+            newOwnerName:newOwner.fullName,
+        })
         if(typeof TxID === 'undefined') return res.send({ success: false })
         else return res.send({ success: true, TxID})
     } catch (error) {
@@ -932,6 +973,27 @@ router.post('/transfer/:dealId/approveTransfer/', authentication, async (req: Re
 router.post('/transfer/:dealId/confirmTransfer/', authentication, async (req: Request, res: Response) => {
     try {
         const TxID = await confirmTransferDeal(req.user.id, req.params.dealId);
+        const transfer = await getTransfer(req.params.dealId);
+        const currentOwner = await getUser(transfer.currentOwner);
+        const newOwner = await getUser(transfer.newOwner);
+        const detail_date = new Date();
+        const car = await getCar(transfer.carId);
+        await mail_comfirmTransfer({
+            currentOwner_email: currentOwner.email,
+            newOwner_email: newOwner.email,
+            date:detail_date.getDate(),
+            month:detail_date.getMonth()+1,
+            year:detail_date.getFullYear(),
+            id:req.params.dealId,
+            currentOwnerName:currentOwner.fullName,
+            newOwnerName:newOwner.fullName,
+            regNumber:car.registrationNumber,
+            brand: car.brand,
+            model:car.model,
+            color:car.color,
+            chassisNumber:car.chassisNumber,
+            engineNumber: car.engineNumber
+        })
         if(typeof TxID === 'undefined') return res.send({ success: false })
         else return res.send({ success: true, TxID})
     } catch (error) {
@@ -943,8 +1005,25 @@ router.post('/transfer/:dealId/confirmTransfer/', authentication, async (req: Re
 router.post('/transfer/:dealId/rejectTransfer', authentication, async (req: Request, res:Response) => {
     try {
         const TxID = await rejectTransferDeal(req.user.id, req.params.dealId);
+        const transfer = await getTransfer(req.params.dealId);
+        const currentOwner = await getUser(transfer.currentOwner);
+        const car = await getCar(transfer.carId);
+        const city = await getCity(car.registeredCity);
+        const newOwner = await getUser(transfer.newOwner);
+        const date = new Date();
         if (typeof TxID === 'undefined') return res.send({ success: false })
-        else return res.send({ success: true, TxID})
+        await mail_rejectTransfer({
+            currentOwner:currentOwner.email,
+            newOwner:newOwner.email,
+            departmentEmail:city.departmentEmail,
+            date:date.getDate(),
+            month: date.getMonth() +1,
+            year: date.getFullYear(),
+            id:req.params.dealId,
+            currentOwnerName:currentOwner.fullName,
+            newOwnerName:newOwner.fullName,
+        })
+        return res.send({ success: true, TxID})
     } catch (error) {
         console.log(error);
         return res.send({ success: false });

@@ -7,7 +7,7 @@ test:
     rounds:
       - label: 250tps
         description: Chuyển sở hữu benchmark
-        txNumber: 5000
+        txNumber: 2500
         rateControl: 
           type: fixed-rate
           opts:

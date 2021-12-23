@@ -3,11 +3,11 @@ test:
     description: test benchmark
     workers:
       type: local
-      number: 3
+      number: 5
     rounds:
       - label: 100tps
         description: Chuyển sở hữu benchmark
-        txNumber: 3000
+        txNumber: 1000
         rateControl: 
           type: fixed-rate
           opts:
@@ -27,4 +27,4 @@ monitors:
   - module: process
     options:
       interval: 3
-      processes: [{ command: 'node', arguments: '/home/anh/car/caliper/node_modules/.bin/caliper', multiOutput: 'avg' }]
+      processes: [{ command: 'node', arguments: '/home/anh/vehicle-management-system-base-on-blockchain/caliper/node_modules/.bin/caliper', multiOutput: 'avg' }]

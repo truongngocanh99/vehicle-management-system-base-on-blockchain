@@ -46,7 +46,7 @@ export default ({ registrationId, nextStep, backStep}) => {
             const result = await axios.put(url, body, config);
             if (result.data.result=="success")setSuccess(true);
             if(result.data.result=="overload"){
-                alert("Số lượng hồ sơ đã quá tải");
+                message.error('Số lượng hồ  sơ đã quá tải vui lòng chọn ngày khác');
                 setLoading(false);
             }
         // } catch (error) {
@@ -59,7 +59,7 @@ export default ({ registrationId, nextStep, backStep}) => {
         try {
             const result = await axios.put(url, value, config);
             if (result){
-                alert("Đã gửi yêu cầu cập nhật hồ sơ thành công");
+                message.success("Đã gửi yêu cầu cập nhật hồ sơ thành công")
                 setLoading(false);
             } 
             else {

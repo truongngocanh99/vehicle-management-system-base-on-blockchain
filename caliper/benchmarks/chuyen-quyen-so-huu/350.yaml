@@ -3,15 +3,15 @@ test:
     description: test benchmark
     workers:
       type: local
-      number: 5
+      number: 10
     rounds:
-      - label: 500tps
+      - label: 350tps
         description: Chuyển sở hữu benchmark
-        txNumber: 5000
+        txNumber: 3500
         rateControl: 
           type: fixed-rate
           opts:
-            tps: 500
+            tps: 350
         workload:
           module: workload/transfer.js
           arguments:

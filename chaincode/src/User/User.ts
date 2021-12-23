@@ -21,5 +21,5 @@ export class User {
     public docType: string;
     public verifyPolice?: string;
     public verified?: boolean;
-    
+    public status? : boolean;
 }

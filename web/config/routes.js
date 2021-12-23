@@ -123,7 +123,7 @@ export default [
         routes: [
           {
             path: '/admin',
-            redirect: '/admin/manager-user'
+            redirect: '/admin/manage-object'
           },
           {
             exact: true,

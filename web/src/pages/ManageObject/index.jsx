@@ -13,7 +13,8 @@ import {
     DatePicker,
     Space,
     Modal,
-    Tag
+    Tag,
+    message
 } from 'antd';
 import { useHistory } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -23,9 +24,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import {fetchCurrentUser} from '@/helpers/Auth'
 import { DEFAULT_HOST } from '@/host';
 import _ from 'lodash'; 
-
 moment.locale('en');
-
 const { Search } = Input;
 import ObjectForm from './components/ObjectForm';
 import AddNewSeri from './components/AddNewSeri';
@@ -45,6 +44,7 @@ export default () => {
     });
     const [deleteCarType, setDeleteCarType] = useState(false);
     const [tloading, setTloading] = useState(true);
+    const [searchField, setSearchField] = useState('seri');
     const user = fetchCurrentUser();
     const config = {
         headers: {
@@ -78,6 +78,27 @@ export default () => {
             console.log(error);
         }
     };
+   
+    const handleSearch = async (value) => {
+        setTloading(true);
+        const objects = await getObjects();
+        if (typeof objects !== 'undefined') {
+            const searchResult = objects.filter(object => {
+                return object[searchField].includes(value);
+            })
+            setObjectData(searchResult);
+            setTloading(false);
+        }
+    }
+    const getObjects = async () => {
+        const url = DEFAULT_HOST + '/object/' + cityOption ;
+            try {
+                const result = await axios.get(url, config);
+                return result.data;
+            } catch (error) {
+                
+            }
+    }
     function handleChange(value) {
         setCityOption(value);
       }
@@ -89,7 +110,7 @@ export default () => {
         setDeleteCarType(true);
         if(result){
             setTloading(false);
-            alert("Xóa thành công");
+            message.success("Xóa thành công");
 
         }
 
@@ -156,25 +177,16 @@ export default () => {
         <PageContainer>
             <Card>
                 <Row gutter={1}>
-                    <Col span={3}>
-                        <Select
-                            defaultValue="seri"
-                            placeholder="Tìm kiếm bằng"
-                            style={{ width: '100%' }}
-                        >
-                            <Select.Option value="seri">Kí hiệu seri</Select.Option>
-                            <Select.Option value="name">Loại xe</Select.Option>
-                        </Select>
-                    </Col>
                     <Col span={8}>
                         <Search
-                            placeholder="Nội dung tìm kiếm"
+                            placeholder="Tìm kiếm theo seri"
                             allowClear
                             enterButton="Tìm kiếm"
                             size="middle"
+                            onSearch={handleSearch}
                         />
                     </Col>
-                    <Col offset={4} span={5}>
+                    <Col offset={6} span={6}>
                         <Select
                             defaultValue="cantho"
                             value={cityOption}

@@ -460,12 +460,12 @@ public async updateNumber(ctx: Context, cityId: string){
         }
     }
       // cap nhat so luong bien so da cap
-      public async updateNumberofPlate(ctx: Context, cityid: string){
+      public async updateNumberofPlate(ctx: Context, cityId: string){
         try {
-            const obAsBytes = await ctx.stub.getState(cityid);//get object from chaincode state
+            const obAsBytes = await ctx.stub.getState(cityId);//get object from chaincode state
             //kiem tra su ton tai car
             if (!obAsBytes || obAsBytes.length === 0) {
-                throw new Error(`${cityid} does not exist`);
+                throw new Error(`${cityId} does not exist`);
             }
             const city = JSON.parse(obAsBytes.toString());
             city.number_of_license_plates++;
@@ -535,7 +535,6 @@ public async addDistrict(ctx: Context, payload: string) {
     // Khoi tao count cho object
     public async InitCount(ctx: Context, objectId: string,lengthSeri: number) {
         try {
-            
             const objectAsBytes = await ctx.stub.getState(objectId);
             if (!objectAsBytes || objectAsBytes.length === 0) {
                 throw new Error(`${objectId} does not exist`);
@@ -599,7 +598,6 @@ public async addDistrict(ctx: Context, payload: string) {
             object.count[object.currentseri_Index]++;
             await ctx.stub.putState(object.id, Buffer.from(JSON.stringify(object)));
             return {error: null};
-            
         }catch (error) {
             console.log(error);
             return false;
@@ -654,9 +652,9 @@ public async addDistrict(ctx: Context, payload: string) {
 
 //      CHAINCODE SHEDULE
 //KHOI TAO THOI BIEU XU LY HO SO
-    public async addSchedule(ctx: Context, payload: string) {
+    public async addSchedule(ctx: Context, scheduleAsString: string) {
         try {
-            const schedule : Schedule = JSON.parse(payload);
+            const schedule : Schedule = JSON.parse(scheduleAsString);
             schedule.docType = "schedule";
             schedule.currentNumber = 0;
             schedule.maxNumber = 10;
@@ -668,9 +666,9 @@ public async addDistrict(ctx: Context, payload: string) {
         }
     }
 // CHINH SUA THOI BIEU   
-public async updateSchedule(ctx: Context, payload: string) {
+public async updateSchedule(ctx: Context, scheduleAsString: string) {
     try {
-        const schedule: Schedule = JSON.parse(payload);
+        const schedule: Schedule = JSON.parse(scheduleAsString);
         const scheduleAsBytes: Uint8Array= await ctx.stub.getState(schedule.id);
         const currentSc: Object = JSON.parse(scheduleAsBytes.toString());
         const newSc: Object = { ...currentSc, ...schedule};

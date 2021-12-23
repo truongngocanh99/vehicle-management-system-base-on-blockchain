@@ -17,4 +17,5 @@ export interface User {
     docType: string;    
     verifyPolice?: string;
     verified?: boolean;
+    status?: boolean;
 }

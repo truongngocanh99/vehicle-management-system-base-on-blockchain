@@ -43,10 +43,11 @@ router.post('/registry/citizen',async (req: Request, res: Response) => {
         await mail_registry_citizen({
             email:citizen.email,
             fullname: citizen.fullName,
+            url:'http://localhost:3000/users/activeAccount/' +citizen.id,
         });
         return res.status(201).json({
             success: true,
-            message: `Dang ky thanh cong ${req.body.fullName}`
+            message: `Dang ky thanh cong ${req.body.fullName} co ID: ${citizen.id}`
         })
     } catch (error) {
         console.log(error);
@@ -128,12 +129,13 @@ router.post('/login-police', async (req: Request, res: Response) => {
 router.post('/login', async (req: Request, res: Response) => {
     try {
         const user = await getUserByPhoneNumber(req.body.phoneNumber);
-        if(typeof user === 'undefined') return res.send({ success: false, message: "Số điện thoại hoặc mật khẩu không đúng" });
+        if(typeof user === 'undefined') return res.send({ success: false, message: "Tài khoản không tồn tại" });
+        if(user.Record.status == false) return res.send({success : false , message: "Tài khoản chưa được kích hoạt"})
         const isCorrectPassword = await bcrypt.compare(req.body.password, user.Record.password);
         if(!isCorrectPassword) {
             const rs = {
                 success: false,
-                message: "Incorrect identity card or password"
+                message: "Số điện thoại hoặc mật khẩu không đúng"
             };
             return res.status(401).send(rs);
         }

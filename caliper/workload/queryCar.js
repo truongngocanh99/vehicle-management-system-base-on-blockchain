@@ -10,18 +10,7 @@ class MyWorkload extends WorkloadModuleBase {
     
     async initializeWorkloadModule(workerIndex, totalWorkers, roundIndex, roundArguments, sutAdapter, sutContext) {
         await super.initializeWorkloadModule(workerIndex, totalWorkers, roundIndex, roundArguments, sutAdapter, sutContext);
-        const car = {
-            id: "U" + nanoid(),
-            registrationNumber: "65A-65246",
-            brand: "Nissan",
-            model: "Maxima",
-            color: "Puce",
-            engineNumber: "U" + nanoid(),
-            chassisNumber: "U" + nanoid(),
-            owner: "U" + nanoid(),
-            year: 2002,
-            capacity: 4124
-        }
+        
         for (let i = 0; i < this.roundArguments.assets; i++) {
             const assetID = `${this.workerIndex}_${i}`;
             console.log(`Worker ${this.workerIndex}: Creating asset ${assetID}`);

@@ -250,10 +250,10 @@ export async function updateCity(userId: string, city: City) {
     }
 }
 // cap nhat so dang ky dia phuong
-export async function switchNumber(id: string, cityid : any) {
+export async function switchNumber(id: string, cityId : any) {
     try{
         const contract = await getCarContract(id);
-        const rs = await contract.submitTransaction('updateNumber',cityid);
+        const rs = await contract.submitTransaction('updateNumber',cityId);
     }catch (error) {
         console.log(error);
         throw error;

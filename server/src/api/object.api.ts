@@ -116,14 +116,7 @@ router.put('/changeSeri/:objectId', authentication, async (request: Request, res
         const seriIndex = request.body.seriIndex;
         const results = await changeSeri(request.user.id, id,seriIndex);
         response.send({success: true});
-        // const result = await getObject(id);
-        // console.log("Result Get OB",result);
-        // if(result.result[seriIndex] >2 ){
-        //     response.send({ success:false});
-        // }else{
-        //     const results = await changeSeri(request.user.id, id,seriIndex);
-        //     response.send({success: true});
-        // }
+       
         
     } catch (error) {
         response.send({success: false});
@@ -162,6 +155,44 @@ router.get('/getSeri/:objectId', authentication, async (request: Request, respon
         console.log(error);
     }
 })
+router.get('/isExist/:city', authentication, async (request: Request, response: Response) => {
+    try {
+        const queryString: any = {};
+        queryString.selector = {
+            docType: 'object',
+            city:request.params.city,
+        }
+        const result = await queryCars(request.user.id, JSON.stringify(queryString));
+        console.log(result);
+        let result_map: any = await Promise.all(result.map(async (state: { Record: any; }) => {
+            const object = state.Record.carType;
+            return object;
+        }));
+        return response.send(result_map);
+    } catch (error) {
+        console.log(error);
+    }
+})
+router.get('/getSeriObject/', authentication, async (request: Request, response: Response) => {
+    try {
+        const queryString: any = {};
+        queryString.selector = {
+            docType: 'object',
+            ...request.query,
+        }
+        if(request.query.carType){
+            queryString.selector.carType=request.query.carType;
+        }
+        if(request.query.city){
+            queryString.selector.city=request.query.city;
+        }
+        const result = await queryCars(request.user.id, JSON.stringify(queryString));
+        console.log("Thong tin Ob ne: ", result);
+        return response.send(result.seri);
+    } catch (error) {
+        console.log(error);
+    }
+})
 router.get('/carTypeAndCity/:objectId', authentication, async (req: Request, res: Response) => {
     const objectId = req.params.objectId;
     const result = await getObject(objectId);
@@ -185,16 +216,16 @@ router.get('/getSeriCity/:city', authentication, async (request: Request, respon
             docType: 'object',
             city : request.params.city
         }
-        
-        const result = await queryCars(request.user.id, JSON.stringify(queryString));
-        // return response.send(result);
         let seri_array= new Array();
-        let seri: any = await Promise.all(result.map(async (state: { Record: any; }) => {
-            const object = state.Record.seri;
-            seri_array = seri_array.concat(object);
-            return seri_array;
-        }));
-        return response.json(seri[seri.length-1]);
+        const result = await queryCars(request.user.id, JSON.stringify(queryString));
+        if(result.length > 0){
+            let seri: any = await Promise.all(result.map(async (state: { Record: any; }) => {
+                const object = state.Record.seri;
+                seri_array = seri_array.concat(object);
+                return seri_array;
+            }));
+            return response.json(seri[seri.length-1]);
+        }else return response.json(seri_array);         
     } catch (error) {
         console.log(error);
     }

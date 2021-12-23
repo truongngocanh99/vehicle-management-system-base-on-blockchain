@@ -7,7 +7,7 @@ test:
     rounds:
       - label: 10tps
         description: Chuyển sở hữu benchmark
-        txDuration: 50
+        txDuration: 30
         rateControl: 
           type: fixed-rate
           opts:
@@ -32,4 +32,4 @@ monitors:
   - module: process
     options:
       interval: 3
-      processes: [{ command: 'node', arguments: '/home/anh/car/caliper/node_modules/.bin/caliper', multiOutput: 'avg' }]
+      processes: [{ command: 'node', arguments: '/home/anh/vehicle-management-system-base-on-blockchain/caliper/node_modules/.bin/caliper', multiOutput: 'avg' }]

@@ -134,7 +134,7 @@
             <ul>
                 <h3>&nbspBenchmark results</h3>
                 <li><a href="#benchmarksummary">Summary</a></li>
-                    <li><a href="#250tps">250tps</a></li>
+                    <li><a href="#10tps">10tps</a></li>
             </ul>
             <ul>
                 <h3>&nbspSystem under test</h3>
@@ -152,67 +152,89 @@
                     </tr>
 
                     <tr>
-                         <td>250tps</td> <td>5000</td> <td>0</td> <td>250.2</td> <td>0.09</td> <td>0.01</td> <td>0.01</td> <td>250.1</td>
+                         <td>10tps</td> <td>303</td> <td>0</td> <td>10.1</td> <td>0.05</td> <td>0.01</td> <td>0.03</td> <td>10.1</td>
                     </tr>
                 </table>
             </div>
-            <div style="border-bottom: 1px solid #d9d9d9; padding-bottom: 10px;" id="250tps">
-                <h2>Benchmark round: 250tps</h2>
+            <div style="border-bottom: 1px solid #d9d9d9; padding-bottom: 10px;" id="10tps">
+                <h2>Benchmark round: 10tps</h2>
                 <p>Chuyển sở hữu benchmark</p>
-                <pre style="overflow: visible;white-space: pre-wrap;max-height:100%;">rateControl:
+                <pre style="overflow: visible;white-space: pre-wrap;max-height:100%;">txDuration: 30
+rateControl:
   type: fixed-rate
   opts:
-    tps: 250
+    tps: 10
 </pre>
-                        <h3>Performance metrics for 250tps</h3>
+                        <h3>Performance metrics for 10tps</h3>
                             <table style="min-width: 100%;">
                                 <tr>
                                      <th>Name</th> <th>Succ</th> <th>Fail</th> <th>Send Rate (TPS)</th> <th>Max Latency (s)</th> <th>Min Latency (s)</th> <th>Avg Latency (s)</th> <th>Throughput (TPS)</th>
                                 </tr>
                                 <tr>
-                                     <td>250tps</td> <td>5000</td> <td>0</td> <td>250.2</td> <td>0.09</td> <td>0.01</td> <td>0.01</td> <td>250.1</td>
+                                     <td>10tps</td> <td>303</td> <td>0</td> <td>10.1</td> <td>0.05</td> <td>0.01</td> <td>0.03</td> <td>10.1</td>
                                 </tr>
                             </table>
-                        <h3>Resource utilization for 250tps</h3>
+                        <h3>Resource utilization for 10tps</h3>
                             <h4>Resource monitor: docker</h4>
                             <table style="min-width: 100%;">
                                 <tr>
                                 <table>
                                     <tr>
-                                         <th>Name</th> <th>CPU%(max)</th> <th>CPU%(avg)</th> <th>Memory(max) [MB]</th> <th>Memory(avg) [MB]</th> <th>Traffic In [MB]</th> <th>Traffic Out [MB]</th> <th>Disc Write [B]</th> <th>Disc Read [B]</th>
+                                         <th>Name</th> <th>CPU%(max)</th> <th>CPU%(avg)</th> <th>Memory(max) [MB]</th> <th>Memory(avg) [MB]</th> <th>Traffic In [MB]</th> <th>Traffic Out [MB]</th> <th>Disc Write [KB]</th> <th>Disc Read [B]</th>
                                     </tr>
                                     <tr>
-                                         <td>dev-peer0.org1.example.com-CRChaincode_1-fad42c5256e8b3b27f8222e7c02721e96a386f90a8805f6495330d6ea5c4de39</td> <td>77.25</td> <td>45.61</td> <td>61.2</td> <td>61.2</td> <td>15.1</td> <td>9.78</td> <td>0.00</td> <td>0.00</td>
+                                         <td>dev-peer0.org2.example.com-CRChaincode_1-fa9190f9e65c49abf23cc03dff2cf7f39b1f9c42e984fc4f97153ac4e7a5c2d1</td> <td>0.98</td> <td>0.22</td> <td>40.8</td> <td>40.8</td> <td>0.0581</td> <td>0.0159</td> <td>0.00</td> <td>0.00</td>
                                     </tr>
                                     <tr>
-                                         <td>dev-peer0.org2.example.com-CRChaincode_1-fad42c5256e8b3b27f8222e7c02721e96a386f90a8805f6495330d6ea5c4de39</td> <td>0.01</td> <td>0.00</td> <td>53.4</td> <td>53.4</td> <td>0.0000629</td> <td>0.0000629</td> <td>0.00</td> <td>0.00</td>
+                                         <td>dev-peer0.org1.example.com-CRChaincode_1-fa9190f9e65c49abf23cc03dff2cf7f39b1f9c42e984fc4f97153ac4e7a5c2d1</td> <td>9.06</td> <td>3.57</td> <td>74.6</td> <td>74.6</td> <td>1.04</td> <td>0.630</td> <td>0.00</td> <td>0.00</td>
                                     </tr>
                                     <tr>
-                                         <td>peer0.org1.example.com</td> <td>76.53</td> <td>46.92</td> <td>215</td> <td>213</td> <td>18.4</td> <td>27.7</td> <td>0.00</td> <td>0.00</td>
+                                         <td>peer0.org1.example.com</td> <td>11.88</td> <td>6.91</td> <td>196</td> <td>185</td> <td>1.55</td> <td>2.10</td> <td>316</td> <td>0.00</td>
                                     </tr>
                                     <tr>
-                                         <td>peer0.org2.example.com</td> <td>4.17</td> <td>2.36</td> <td>141</td> <td>140</td> <td>0.0247</td> <td>0.0250</td> <td>0.00</td> <td>0.00</td>
+                                         <td>peer0.org2.example.com</td> <td>7.88</td> <td>3.63</td> <td>126</td> <td>121</td> <td>0.369</td> <td>0.252</td> <td>316</td> <td>0.00</td>
                                     </tr>
                                     <tr>
-                                         <td>couchdb0</td> <td>4.52</td> <td>2.41</td> <td>97.0</td> <td>96.5</td> <td>0.00</td> <td>0.00</td> <td>0.00</td> <td>0.00</td>
+                                         <td>orderer.example.com</td> <td>1.41</td> <td>0.45</td> <td>67.1</td> <td>64.0</td> <td>0.201</td> <td>0.349</td> <td>404</td> <td>0.00</td>
                                     </tr>
                                     <tr>
-                                         <td>orderer.example.com</td> <td>0.66</td> <td>0.22</td> <td>139</td> <td>139</td> <td>0.00189</td> <td>0.00194</td> <td>0.00</td> <td>0.00</td>
+                                         <td>couchdb0</td> <td>17.85</td> <td>5.19</td> <td>71.2</td> <td>70.6</td> <td>0.0385</td> <td>0.0484</td> <td>264</td> <td>0.00</td>
                                     </tr>
                                     <tr>
-                                         <td>couchdb1</td> <td>3.89</td> <td>2.03</td> <td>94.9</td> <td>94.9</td> <td>0.00</td> <td>0.00</td> <td>0.00</td> <td>0.00</td>
+                                         <td>couchdb1</td> <td>16.09</td> <td>6.03</td> <td>75.7</td> <td>75.6</td> <td>0.0382</td> <td>0.0485</td> <td>264</td> <td>0.00</td>
                                     </tr>
                                     <tr>
-                                         <td>ca_org1</td> <td>0.00</td> <td>0.00</td> <td>7.94</td> <td>7.94</td> <td>0.00</td> <td>0.00</td> <td>0.00</td> <td>0.00</td>
+                                         <td>ca_orderer</td> <td>0.00</td> <td>0.00</td> <td>13.3</td> <td>13.3</td> <td>0.00</td> <td>0.00</td> <td>0.00</td> <td>0.00</td>
                                     </tr>
                                     <tr>
-                                         <td>ca_orderer</td> <td>0.00</td> <td>0.00</td> <td>27.0</td> <td>27.0</td> <td>0.00</td> <td>0.00</td> <td>0.00</td> <td>0.00</td>
+                                         <td>ca_org2</td> <td>0.00</td> <td>0.00</td> <td>12.4</td> <td>12.4</td> <td>0.00</td> <td>0.00</td> <td>0.00</td> <td>0.00</td>
                                     </tr>
                                     <tr>
-                                         <td>ca_org2</td> <td>0.00</td> <td>0.00</td> <td>7.67</td> <td>7.67</td> <td>0.00</td> <td>0.00</td> <td>0.00</td> <td>0.00</td>
+                                         <td>ca_org1</td> <td>0.00</td> <td>0.00</td> <td>15.9</td> <td>15.9</td> <td>0.00</td> <td>0.00</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>explorer.mynetwork.com</td> <td>0.00</td> <td>0.00</td> <td>0.00</td> <td>0.00</td> <td>0.00</td> <td>-</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                    <tr>
+                                         <td>explorerdb.mynetwork.com</td> <td>0.00</td> <td>0.00</td> <td>0.00</td> <td>0.00</td> <td>0.00</td> <td>-</td> <td>0.00</td> <td>0.00</td>
                                     </tr>
                                     <tr>
                                          <td>admiring_villani</td> <td>0.00</td> <td>0.00</td> <td>0.00</td> <td>0.00</td> <td>0.00</td> <td>-</td> <td>0.00</td> <td>0.00</td>
+                                    </tr>
+                                </table>
+                                </tr>
+                            </table>
+                            <div class="charting">
+                            </div>
+                            <h4>Resource monitor: process</h4>
+                            <table style="min-width: 100%;">
+                                <tr>
+                                <table>
+                                    <tr>
+                                         <th>Name</th> <th>CPU%(max)</th> <th>CPU%(avg)</th> <th>Memory(max) [B]</th> <th>Memory(avg) [B]</th>
+                                    </tr>
+                                    <tr>
+                                         <td>node &#x2F;home&#x2F;anh&#x2F;vehicle-management-system-base-on-blockchain&#x2F;caliper&#x2F;node_modules&#x2F;.bin&#x2F;caliper(avg)</td> <td>8.22</td> <td>3.85</td> <td>-</td> <td>-</td>
                                     </tr>
                                 </table>
                                 </tr>
@@ -228,15 +250,15 @@
 description: test benchmark
 workers:
   type: local
-  number: 5
+  number: 3
 rounds:
-  - label: 250tps
+  - label: 10tps
     description: Chuyển sở hữu benchmark
-    txNumber: 5000
+    txDuration: 30
     rateControl:
       type: fixed-rate
       opts:
-        tps: 250
+        tps: 10
     workload:
       module: workload&#x2F;transfer.js
       arguments:

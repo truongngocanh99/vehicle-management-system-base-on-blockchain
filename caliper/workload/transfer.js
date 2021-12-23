@@ -3,7 +3,7 @@
 const { WorkloadModuleBase } = require('@hyperledger/caliper-core');
 const {nanoid, random} = require('nanoid');
 
-
+const carId = "R" + nanoid();
 class MyWorkload extends WorkloadModuleBase {
     constructor() {
         super();
@@ -27,13 +27,26 @@ class MyWorkload extends WorkloadModuleBase {
             carType:"carType3",
         }
         for (let i = 0; i < this.roundArguments.assets; i++) {
-            const carId = `${this.workerIndex}_${i}`;
+            // const carId = `${this.workerIndex}_${i}`;
             console.log(`Worker ${this.workerIndex}: Creating Car ${carId}`);
             const request = {
                 contractId: this.roundArguments.contractId,
                 contractFunction: 'createRegistration',
                 invokerIdentity: 'User1',
-                contractArguments: [carId, car.engineNumber, car.chassisNumber, car.brand, car.model, car.color, car.year, car.capacity, car.owner,car.registeredCity,car.registeredDistrict,car.carType],
+                contractArguments: [
+                    carId, 
+                    car.engineNumber,
+                        car.chassisNumber,
+                        car.brand, 
+                        car.model, 
+                        car.color, 
+                        car.year, 
+                        car.capacity, 
+                        car.owner,
+                        car.registeredCity,
+                        car.registeredDistrict,
+                        car.carType
+                ],
                 readOnly: false
             };
             await this.sutAdapter.sendRequests(request);
@@ -46,6 +59,9 @@ class MyWorkload extends WorkloadModuleBase {
             id : "T" + nanoid(),
             currentOwner:"CO" + nanoid(),
             newOwner: "NO" + nanoid(),
+            carId: "R" + nanoid(),
+            state:0,
+            rejectUser: "Trương Ngọc Ánh",
         }
         try {
             const randomId = Math.floor(Math.random()*this.roundArguments.assets);
@@ -53,7 +69,7 @@ class MyWorkload extends WorkloadModuleBase {
                 contractId: this.roundArguments.contractId,
                 contractFunction: 'createTransferOffer',
                 invokerIdentity: 'User1',
-                contractArguments: [ transfer.id, `${this.workerIndex}_${randomId}`, transfer.currentOwner, transfer.newOwner],
+                contractArguments: [ transfer.id,carId, transfer.currentOwner, transfer.newOwner],
                 readOnly: true
             };
     
@@ -65,19 +81,19 @@ class MyWorkload extends WorkloadModuleBase {
     
     async cleanupWorkloadModule() {
     
-        // for (let i=0; i<this.roundArguments.assets; i++) {
-        //     const carId = `${this.workerIndex}_${i}`;
-        //     console.log(`Worker ${this.workerIndex}: Deleting Car ${carId}`);
-        //     const request = {
-        //         contractId: this.roundArguments.contractId,
-        //         contractFunction: 'deleteCar',
-        //         invokerIdentity: 'User1',
-        //         contractArguments: [carId],
-        //         readOnly: false
-        //     };
+        for (let i=0; i<this.roundArguments.assets; i++) {
+            // const carId = `${this.workerIndex}_${i}`;
+            console.log(`Worker ${this.workerIndex}: Deleting Car ${carId}`);
+            const request = {
+                contractId: this.roundArguments.contractId,
+                contractFunction: 'deleteCar',
+                invokerIdentity: 'User1',
+                contractArguments: [carId],
+                readOnly: false
+            };
 
-        //     await this.sutAdapter.sendRequests(request);
-        // }
+            await this.sutAdapter.sendRequests(request);
+        }
     }
 }
 

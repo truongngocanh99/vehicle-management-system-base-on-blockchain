@@ -1,11 +1,11 @@
 
 import { Router, Request, Response } from 'express';
-import { User, queryUser, modifyUser, verifyUser, changePassword, getUserById } from '../fabric/user/User.fabric';
+import { User, queryUser, modifyUser, verifyUser, changePassword, getUserById, activeAccount } from '../fabric/user/User.fabric';
 import { authentication } from '../middleware/auth.middleware';
 import { queryCars, getCity, getDistrict,getObject,getNameCity, getCarType } from '../fabric/car/Car.fabric';
 import * as bcrypt from 'bcrypt';
 import { parse } from 'dotenv/types';
-
+var path = require('path');
 const router = Router();
 
 const jwt_secret = process.env.JWT_SECRET || "blockchain";
@@ -189,6 +189,21 @@ router.put('/:id/verify', authentication, async (req: Request, res: Response) =>
     }
     
 })
+router.get('/activeAccount/:id', async (req: Request, res: Response) => {
+    try{
+        //if (req.user.role !== 'police' || req.user.role !== 'admin') return res.sendStatus(403); 
+        const result = await activeAccount(req.params.id);
+        if(result) 
+            return res.sendFile( path.join(__dirname+'/activePage.html'));
+        return  res.send("<html><script>alert('Kích hoạt tài khoản thất bại');</script></html>") ;
+        
+        return res.send({success: false});
+    }catch(error){
+        console.log(error);
+    }
+    
+})
+
 router.get('/:id/transferRequest', authentication, async (req: Request, res: Response) => {
     const queryResult: any = {}
     queryResult.selector = {

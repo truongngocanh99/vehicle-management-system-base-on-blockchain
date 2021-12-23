@@ -3,11 +3,11 @@ test:
     description: test benchmark
     workers:
       type: local
-      number: 2
+      number: 5
     rounds:
       - label: 50tps
         description: Chuyển sở hữu benchmark
-        txNumber: 1000
+        txNumber: 500
         rateControl: 
           type: fixed-rate
           opts:

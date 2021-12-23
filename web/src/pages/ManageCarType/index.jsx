@@ -13,7 +13,8 @@ import {
     DatePicker,
     Space,
     Modal,
-    Tag
+    Tag,
+    message
 } from 'antd';
 import { useHistory } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -38,6 +39,7 @@ export default () => {
     const [editCarType, setEditCarType] = useState({
         visible: false,
     });
+    const [searchField, setSearchField] = useState('name');
     const [tloading, setTloading] = useState(true);
     const user = fetchCurrentUser();
     const config = {
@@ -64,12 +66,33 @@ export default () => {
         setDeleteCarType(true);
         if(result){
             setTloading(false);
-            alert("Xóa thành công");
+            message.success("Xóa thành công");
 
         }
 
     }
- 
+    const handleSearch = async (value) => {
+        setTloading(true);
+        const carTypes = await getCarTypes();
+        if (typeof carTypes !== 'undefined') {
+            const searchResult = carTypes.filter(carType => {
+                console.log(carType[searchField])
+                return carType[searchField].includes(value);
+                
+            })
+            setCarTypeData(searchResult);
+            setTloading(false);
+        }
+    }
+    const getCarTypes = async () => {
+        const url = DEFAULT_HOST + '/carType/';
+            try {
+                const result = await axios.get(url, config);
+                return result.data;
+            } catch (error) {
+                
+            }
+    }
     const columns = [
      
         {
@@ -109,11 +132,12 @@ export default () => {
                             allowClear
                             enterButton="Tìm kiếm"
                             size="middle"
+                            onSearch={handleSearch}
                         />
                     </Col>
                    
                    
-                    <Col offset={8} span={8}>
+                    <Col offset={7} span={8}>
                         <Space style={{ float: 'right' }}>
                             <Button
                                 type="primary"
@@ -121,7 +145,7 @@ export default () => {
                                 onClick={() => setFormVisible(true)}
                             >
                                 <PlusOutlined />
-                                Thêm đối tượng
+                                Thêm loại xe
                             </Button>
                         </Space>
                     </Col>

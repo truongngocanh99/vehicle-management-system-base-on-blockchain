@@ -12,7 +12,8 @@ const LoginForm = () => {
     const [password, setPassword] = useState('');
     const [buttonLoading, setButtonLoading] = useState(false);
     const [failed, setFailed] = useState(false);
-
+    const [exist, setExist] = useState(false);
+    const [isActive, setIsActive] = useState(false);
     const auth = fetchCurrentUser()
 
     const handleUsernameInput = (event) => {
@@ -31,6 +32,7 @@ const LoginForm = () => {
                 url: serverUrl + 'auth/login',
                 data: values,
             });
+            console.log(result);
             if (result.data.success) {
                 const user = result.data.data.user;
                 const token = result.data.data.token;
@@ -39,8 +41,18 @@ const LoginForm = () => {
                 if (user.role === 'police') history.push('/police');
                 if (user.role === 'admin') history.push('/admin');
             }
-            else setFailed(true);
-            setButtonLoading(false);
+            else if (!result.data.success && result.data.message =="Tài khoản chưa được kích hoạt"){
+                setIsActive(true);// chua kich hoat
+                setButtonLoading(false);
+            }
+            else if (!result.data.success && result.data.message =="Tài khoản không tồn tại"){
+                setExist(true);// chua ton tai
+                setButtonLoading(false);
+            }
+            else {
+                setFailed(true);
+                setButtonLoading(false);
+            }
         } catch (error) {
             console.log(error);
             setButtonLoading(false);
@@ -93,6 +105,8 @@ const LoginForm = () => {
                     Đăng nhập
                 </Button>
             </Form.Item>
+            {exist ? <Alert type='error' message='Tài khoản chưa tồn tại'></Alert> : null}
+            {isActive ? <Alert type='error' message='Tài khoản chưa được kích hoạt'></Alert> : null}
             {failed ? <Alert type='error' message='Tài khoản hoặc mật khẩu không đúng'></Alert> : null}
         </Form>
     )

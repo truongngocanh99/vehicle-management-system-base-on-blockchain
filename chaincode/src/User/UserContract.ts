@@ -23,6 +23,7 @@ export class UserContract extends Contract {
         user.verified = user.verifyPolice ? true : false;
         user.createTime = new Date(ctx.stub.getTxTimestamp().seconds * 1000).toString();
         user.updateTime = new Date(ctx.stub.getTxTimestamp().seconds * 1000).toString();
+        user.status = false;
         await ctx.stub.putState(user.id, Buffer.from(JSON.stringify(user)));
         console.log("END========CREATE-USER===========");
     }
@@ -37,7 +38,13 @@ export class UserContract extends Contract {
         await ctx.stub.putState(user.id, Buffer.from(JSON.stringify(user)));
         return ctx.stub.getTxID();
     }
-
+    public async activeAccount(ctx: Context, userId: string) {
+        const userAsBytes = await ctx.stub.getState(userId);
+        const user: User = JSON.parse(userAsBytes.toString());
+        user.status = true;
+        await ctx.stub.putState(userId, Buffer.from(JSON.stringify(user)));
+        return userId;
+    }
     public async changePassword(ctx: Context, userId: string, newPassword: string) {
         const userAsBytes = await ctx.stub.getState(userId);
         const user: User = JSON.parse(userAsBytes.toString());

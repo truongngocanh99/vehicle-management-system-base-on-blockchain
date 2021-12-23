@@ -17,7 +17,8 @@ export default ({disable}) => {
     const [cities,setCity]= useState([]);
     const [cityOption, setCityOption]= useState();
     const [validate, setValidate]= useState();
-
+    const [seriCity,setSeriCity] = useState(["0"]);
+    const [existCT,setExistCT] = useState([]);
     const config = {
         headers: {
             Authorization: 'Bearer ' + user.token,
@@ -51,6 +52,22 @@ export default ({disable}) => {
       function handleChangeCity(value) {
         setCityOption(value);
       }
+      useEffect(()=>{
+        const r = async () => {
+            const url=  DEFAULT_HOST + '/object/getSeriCity/' +cityOption;
+            const result = await axios.get(url, config);
+            setSeriCity(result.data)
+        };
+        r()
+    },[cityOption])
+    useEffect(()=>{
+        const x = async () => {
+            const url=  DEFAULT_HOST + '/object/isExist/' +cityOption;
+            const result = await axios.get(url, config);
+            setExistCT(result.data)
+        };
+        x()
+    },[cityOption])
     const formFinish = async (value) => {
         setLoading(true);
         try {
@@ -95,7 +112,18 @@ export default ({disable}) => {
                 name='carType'
                 label='Loại xe đăng ký'
                 wrapperCol= {{span:20, offset:3}}
-                rules={[{ required: true, message: 'Vui lòng chọn loại xe đăng ký' }]}
+                rules={[{ required: true, message: 'Vui lòng chọn loại xe đăng ký' },
+                        {   validator: async (rule, carType) => {
+                                if(carType){
+                                    let seri2 = existCT.filter((a) => {
+                                        if(a == carType){
+                                            throw 'Loại xe này đã được đăng ký'
+                                        } 
+                                    })
+                                }
+                                },
+                            },
+                ]}
             >
                <Select
                     placeholder="Chọn loại xe đăng kí"
@@ -114,7 +142,19 @@ export default ({disable}) => {
                 name='seri'
                 label="Ký hiệu seri"
                 wrapperCol= {{span:20}}
-                rules={[{ required: true, message: 'Vui lòng nhập seri' }]}
+                rules={[{ required: true, message: 'Vui lòng nhập seri' },
+                {   validator: async (rule, newSeri) => {
+                        if(seri){
+                            let seri2 = seriCity.filter((a) => {
+                                if(a == seri){
+                                    throw 'Seri đã được sử dụng'
+                                } 
+                            })
+                        }
+                        },
+                    },
+
+                ]}
             >
                 <Select
                     disabled={loading}

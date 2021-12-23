@@ -100,7 +100,16 @@ export async function verifyUser(userId: string, verifyUserId: string) {
         return {TxID: null}
     }
 }
-
+export async function activeAccount( UserId: string) {
+    try {
+        const contract = await getUserContract(UserId);
+        const result = await contract.submitTransaction('activeAccount', UserId);
+        return result;
+        // return {TxID: result.toString()};
+    } catch (error) {
+        return {TxID: null}
+    }
+}
 export async function changePassword(userId: string, newPassword: string) {
     try {
         const contract = await getUserContract(userId);
