@@ -240,7 +240,6 @@ router.get('/getEventCalendar', authentication, async (req: Request, res: Respon
             docType: 'schedule',
             cityId: req.user.city.id,
         }
-    
     const cars = await queryCars(id, JSON.stringify(queryString));
     if(!cars|| cars.length === 0) return res.json(0);
     let result: any = await Promise.all(cars.map(async (state: { Record: any; }) => {

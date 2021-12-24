@@ -3,11 +3,11 @@ test:
     description: test benchmark
     workers:
       type: local
-      number: 5
+      number: 3
     rounds:
       - label: 250tps
         description: Chuyển sở hữu benchmark
-        txNumber: 2500
+        txNumber: 5000
         rateControl: 
           type: fixed-rate
           opts:
@@ -24,3 +24,4 @@ monitors:
       interval: 5 
       containers:
       - all
+      

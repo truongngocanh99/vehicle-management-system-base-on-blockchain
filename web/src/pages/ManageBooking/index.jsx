@@ -186,7 +186,6 @@ export default () => {
         setDate(date.dateStr);
         setDetail(true);
        
-    
       }
       const columns = [
         {
@@ -248,7 +247,7 @@ export default () => {
         console.log(data);
         setPageLoading(false);
 
-    },[date]);
+    },[date,detail]);
     const handleOk = () => {
         setDetail(false);
       };

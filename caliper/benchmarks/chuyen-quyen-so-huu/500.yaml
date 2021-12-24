@@ -3,7 +3,7 @@ test:
     description: test benchmark
     workers:
       type: local
-      number: 5
+      number: 3
     rounds:
       - label: 500tps
         description: Chuyển sở hữu benchmark

@@ -196,7 +196,6 @@ router.get('/activeAccount/:id', async (req: Request, res: Response) => {
         if(result) 
             return res.sendFile( path.join(__dirname+'/activePage.html'));
         return  res.send("<html><script>alert('Kích hoạt tài khoản thất bại');</script></html>") ;
-        
         return res.send({success: false});
     }catch(error){
         console.log(error);
